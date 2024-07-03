@@ -1,6 +1,6 @@
 abstract class Shape(var points: List<Point>) {
 
-    fun move(dx: Double, dy: Double) {
+    open fun move(dx: Double, dy: Double) {
         for (point in points) point.move(dx, dy)
     }
 

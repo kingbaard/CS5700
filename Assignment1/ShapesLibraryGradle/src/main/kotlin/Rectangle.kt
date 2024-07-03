@@ -1,9 +1,6 @@
 import kotlin.math.absoluteValue
 
 open class Rectangle(val startingPoint: Point, val oppositePoint: Point) : Shape(listOf(startingPoint, oppositePoint)) {
-    fun init() {
-        points = listOf(startingPoint, oppositePoint)
-    }
 
     override fun area() = (startingPoint.x - oppositePoint.x).absoluteValue * (startingPoint.y - oppositePoint.y).absoluteValue
 

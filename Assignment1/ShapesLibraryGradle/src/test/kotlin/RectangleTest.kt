@@ -13,7 +13,6 @@ class RectangleTest {
         startingPoint = Point(1.0, 2.0)
         oppositePoint = Point(4.0, 5.0)
         rectangle = Rectangle(startingPoint, oppositePoint)
-        rectangle.init()
     }
 
     @Test
