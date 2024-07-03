@@ -1,10 +1,7 @@
-abstract class Shape(val startingPoint: Point) {
-    var points: List<Point> = emptyList()
+abstract class Shape(var points: List<Point>) {
 
     fun move(dx: Double, dy: Double) {
-        for (point in points) {
-            point.move(dx, dy)
-        }
+        for (point in points) point.move(dx, dy)
     }
 
     fun getAttributes() = points

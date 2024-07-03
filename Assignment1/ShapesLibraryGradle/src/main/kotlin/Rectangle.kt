@@ -1,6 +1,6 @@
 import kotlin.math.absoluteValue
 
-open class Rectangle(startingPoint: Point, val oppositePoint: Point) : Shape(startingPoint) {
+open class Rectangle(val startingPoint: Point, val oppositePoint: Point) : Shape(listOf(startingPoint, oppositePoint)) {
     fun init() {
         points = listOf(startingPoint, oppositePoint)
     }
