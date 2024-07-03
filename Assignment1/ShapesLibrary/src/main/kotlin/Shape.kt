@@ -1,5 +1,5 @@
-abstract class Shape() {
-    lateinit var points: List<Point>
+abstract class Shape(val startingPoint: Point) {
+    var points: List<Point> = emptyList()
 
     fun move(dx: Double, dy: Double) {
         for (point in points) {

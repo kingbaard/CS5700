@@ -1,18 +1,18 @@
 import kotlin.math.absoluteValue
 
-class Rectangle(val cornerPoint1: Point, val cornerPoint2: Point) : Shape() {
+open class Rectangle(startingPoint: Point, val oppositePoint: Point) : Shape(startingPoint) {
     fun init() {
-        points = listOf(cornerPoint1, cornerPoint2)
+        points = listOf(startingPoint, oppositePoint)
     }
 
-    override fun area() = (cornerPoint1.x - cornerPoint2.x).absoluteValue * (cornerPoint1.y - cornerPoint2.y).absoluteValue
+    override fun area() = (startingPoint.x - oppositePoint.x).absoluteValue * (startingPoint.y - oppositePoint.y).absoluteValue
 
     override fun validate(): Boolean {
         // Check if width is 0
-        if ((cornerPoint1.x - cornerPoint2.x).absoluteValue == 0.toDouble()) {
+        if ((startingPoint.x - oppositePoint.x).absoluteValue == 0.toDouble()) {
             throw Exception("Width cannot equal 0 when making a rectangle")
         }
-        if ((cornerPoint1.y - cornerPoint2.y).absoluteValue == 0.toDouble()) {
+        if ((startingPoint.y - oppositePoint.y).absoluteValue == 0.toDouble()) {
             throw Exception("Height cannot equal 0 when making a rectangle")
         }
         return true
