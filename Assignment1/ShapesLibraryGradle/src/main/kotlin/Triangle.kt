@@ -3,6 +3,7 @@ import kotlin.math.abs
 class Triangle(val cornerPoint1:Point,
                val cornerPoint2:Point,
                val cornerPoint3:Point):Shape(listOf(cornerPoint1, cornerPoint2, cornerPoint3)) {
+
     override fun area(): Double {
         val x1 = cornerPoint1.x
         val y1 = cornerPoint1.y
