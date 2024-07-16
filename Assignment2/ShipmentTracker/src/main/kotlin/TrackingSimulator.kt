@@ -3,7 +3,6 @@ import java.io.File
 
 object TrackingSimulator {
     val shipments =  mutableStateMapOf<String, Shipment>()
-    val validShipmentIds : Set<String> = getValidIds()
     val file = File("test.txt")
     var time : Int? = getStartingTime()
     val simFileMap: MutableMap<String, MutableList<String>> = mutableMapOf<String, MutableList<String>>()
@@ -19,8 +18,6 @@ object TrackingSimulator {
     fun findShipment(queryId: String): Shipment? {
         return if (shipments.keys.contains(queryId)) {
             shipments[queryId]
-        } else if (validShipmentIds.contains(queryId)) {
-            null
         } else {
             null
         }
@@ -38,12 +35,13 @@ object TrackingSimulator {
     fun processSecond(updateStrings : MutableList<String>?) {
         updateStrings?.forEach{ updateString ->
             val updateStringSplit: List<String> = updateString.split(",")
+            var shippingUpdate : ShippingUpdate? = null
             if (shipments.keys.contains(updateStringSplit[2])) {
                 when (updateStringSplit[0].trim()) {
                     "created" -> {
                         addShipment(Shipment("created", updateStringSplit[0]))
                     }
-                    "shipped" -> println("shipped")
+                    "shipped" -> shipments[updateStringSplit[0]].addUpdate()
                     "location" -> println("location")
                     "delayed" -> println("delayed")
                     "noteadded" -> println("noteadded")

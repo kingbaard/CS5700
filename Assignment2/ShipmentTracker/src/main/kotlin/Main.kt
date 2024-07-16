@@ -65,9 +65,9 @@ fun App() {
     }
 }
 
-fun addShipmentOnClick(id: String, shipments: MutableList<Shipment>) {
-    if (id.isNotBlank()) {
-        shipments.add(Shipment(id))
+fun addShipmentOnClick(inputId: String) {
+    if (inputId.isNotBlank()) {
+        TrackingSimulator.addShipment()
     }
 }
 
