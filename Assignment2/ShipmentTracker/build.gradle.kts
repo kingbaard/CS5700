@@ -1,9 +1,11 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 
 plugins {
-    kotlin("jvm")
-    id("org.jetbrains.compose")
-    id("org.jetbrains.kotlin.plugin.compose")
+//    kotlin("jvm")
+//    id("org.jetbrains.compose")
+//    id("org.jetbrains.kotlin.plugin.compose")
+//    kotlin("jvm") version "2.0.0"
+    kotlin("jvm") version "2.0.0"
 }
 
 group = "org.example"
@@ -21,6 +23,7 @@ dependencies {
     // (in a separate module for demo project and in testMain).
     // With compose.desktop.common you will also lose @Preview functionality
     implementation(compose.desktop.currentOs)
+    implementation(kotlin("stdlib-jdk8"))
 }
 
 compose.desktop {
@@ -33,4 +36,7 @@ compose.desktop {
             packageVersion = "1.0.0"
         }
     }
+}
+kotlin {
+    jvmToolchain(21)
 }
