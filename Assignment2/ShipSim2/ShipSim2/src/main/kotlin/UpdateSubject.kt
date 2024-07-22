@@ -1,5 +1,5 @@
 interface UpdateSubject {
     fun subscribe(observer: UpdateObserver)
     fun unsubscribe(observer: UpdateObserver)
-    fun notify()
+    fun notify(shippingUpdate: ShippingUpdate)
 }

@@ -15,12 +15,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
+import App as App1
 
 @Composable
 @Preview
-fun App() {
+suspend fun App() {
     var text by remember { mutableStateOf("") }
     val trackerViewHelperList : List<TrackerViewHelper> =  mutableListOf<TrackerViewHelper>()
+    TrackingSimulator.runSimulation()
 
     MaterialTheme {
         Column(
@@ -79,6 +81,6 @@ fun addShipmentOnClick(inputId: String) {
 
 fun main() = application {
     Window(onCloseRequest = ::exitApplication) {
-        App()
+        App1()
     }
 }

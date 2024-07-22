@@ -1,4 +1,5 @@
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.*
@@ -11,18 +12,18 @@ class TrackerViewHelper (
     val shipmentUpdateHistory: List<String>, //State<List<String>>
     var expectedShipmentDeliveryDate : String, //by mutableStateOf()
     var shipmentStatus : String //by mutableStateOf(Shipment.status)
-) {
-    var shipmentString: String = ""
+) : UpdateObserver {
 
     @Composable
     fun Render() {
         Column(){
-            Text(text = shipmentString)
+            Row(){
+                //ID goes here
+
+                //
+            }
+            Text(text = shipmentStatus)
         }
-    }
-
-    fun updateShippingString() {
-
     }
 
     //TODO: add private setter to all attributes
@@ -32,5 +33,9 @@ class TrackerViewHelper (
 
     fun stopTracking() {
         
+    }
+
+    override fun notify(update: ShippingUpdate) {
+        TODO("Not yet implemented")
     }
 }
