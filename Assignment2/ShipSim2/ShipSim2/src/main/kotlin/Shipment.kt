@@ -12,8 +12,10 @@ class Shipment(
         notes.add(note)
     }
 
-    fun addUpdate(update: ShippingUpdate) {
-        updateHistory.add(update)
+    fun addUpdate(updateStrategy: AddUpdateStrategy, updateValues: List<String>) {
+        val newShippingUpdate = updateStrategy.addUpdate(this, updateValues)
+        updateHistory.add(newShippingUpdate)
+        notify(this)
     }
 
     override fun subscribe(observer: UpdateObserver) {
@@ -24,9 +26,9 @@ class Shipment(
         observers.remove(observer)
     }
 
-    override fun notify(shippingUpdate: ShippingUpdate) {
+    override fun notify(shipment: Shipment) {
         for (observer in observers) {
-            observer.notify(shippingUpdate)
+            observer.notify(shipment)
         }
     }
 }

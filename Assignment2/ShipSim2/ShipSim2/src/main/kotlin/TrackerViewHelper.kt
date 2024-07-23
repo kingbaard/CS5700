@@ -1,41 +1,95 @@
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.Button
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.*
-import androidx.compose.ui.input.pointer.PointerIcon.Companion.Text
-import jdk.javadoc.internal.doclets.formats.html.markup.Text
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 
-class TrackerViewHelper (
-    var shipmentId : String, //by mutableStateOf(Shipment.id)
-    val shipmentTotes: List<String>, //State<List<String>>
-    val shipmentUpdateHistory: List<String>, //State<List<String>>
-    var expectedShipmentDeliveryDate : String, //by mutableStateOf()
-    var shipmentStatus : String //by mutableStateOf(Shipment.status)
-) : UpdateObserver {
 
-    @Composable
-    fun Render() {
-        Column(){
-            Row(){
-                //ID goes here
+class TrackerViewHelper(
+    private val _shipmentId: String
+    ) : UpdateObserver {
+    private val _shipmentTotes: List<String> = listOf()
+    private var shipmentUpdateHistory = mutableStateListOf<ShippingUpdate>()
+    private var shipmentNotes = mutableStateListOf<String>()
+    private var _expectedShipmentDeliveryDate by mutableStateOf("Unknown")
+    private var _shipmentStatus by mutableStateOf("Unknown")
+    private var _location by mutableStateOf("Unknown")
 
-                //
-            }
-            Text(text = shipmentStatus)
+    init {
+        val shipment: Shipment? = TrackingSimulator.findShipment(_shipmentId)
+        if (shipment != null) {
+            notify(shipment)
         }
     }
 
-    //TODO: add private setter to all attributes
-    fun trackShipment(id: String) {
+    val shipmentId: String
+        get() = _shipmentId
 
+    val shipmentTotes: List<String>
+        get() = _shipmentTotes
+
+    val expectedShipmentDeliveryDate: String
+        get() = _expectedShipmentDeliveryDate
+
+    val shipmentStatus: String
+        get() = _shipmentStatus
+
+    val location: String
+        get() = _location
+
+    @Composable
+    fun render() {
+        MaterialTheme {
+            Column {
+                Row {
+                    Text(text = "Tracking Shipment #${shipmentId}")
+                }
+                Row {
+                    Text(text = "Status: $shipmentStatus")
+                }
+                Row {
+                    Text(text = "ETA: $expectedShipmentDeliveryDate")
+                }
+                Row {
+                    Text(text = "Location: $location")
+                }
+                Row {
+                    Column {
+                        Text(text = "Update History:")
+                        shipmentUpdateHistory.forEach { update ->
+                            Text(text = "  •Shipment went from ${update.previousStatus} to ${update.newStatus} on ${update.timestamp}")
+                        }
+                    }
+
+                }
+                Row {
+                    Column {
+                        Text(text = "Notes:")
+                        shipmentNotes.forEach { update ->
+                            Text(text = "  •$update")
+                        }
+                    }
+                }
+            }
+        }
     }
 
-    fun stopTracking() {
-        
+    fun removeTracking() {
+        val shipment :Shipment? = TrackingSimulator.findShipment(_shipmentId)
+        if (shipment != null) {
+            shipment.unsubscribe(this)
+        }
     }
 
-    override fun notify(update: ShippingUpdate) {
-        TODO("Not yet implemented")
+    override fun notify(shipment: Shipment) {
+        shipmentUpdateHistory.clear()
+        shipmentUpdateHistory.addAll(shipment.updateHistory)
+        _shipmentStatus = shipment.status
+        _expectedShipmentDeliveryDate = shipment.expectedDeliveryDateTimestamp.toString()
+        _location = shipment.currentLocation
     }
 }

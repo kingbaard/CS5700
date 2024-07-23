@@ -1,4 +1,4 @@
 interface UpdateObserver {
-    fun notify(update: ShippingUpdate)
+    fun notify(shipment: Shipment)
 
 }

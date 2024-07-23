@@ -1,4 +1,5 @@
 import androidx.compose.desktop.ui.tooling.preview.Preview
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -15,14 +16,30 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
-import App as App1
+import kotlinx.coroutines.launch
 
 @Composable
 @Preview
-suspend fun App() {
+fun App() {
     var text by remember { mutableStateOf("") }
-    val trackerViewHelperList : List<TrackerViewHelper> =  mutableListOf<TrackerViewHelper>()
-    TrackingSimulator.runSimulation()
+    val trackerViewHelperList = remember { mutableStateListOf<TrackerViewHelper>() }
+
+    LaunchedEffect(Unit) {
+        TrackingSimulator.runSimulation()
+    }
+
+    fun addShipmentOnClick(inputId: String) {
+        if (inputId.isNotBlank()) {
+            val shipment: Shipment? = TrackingSimulator.findShipment(inputId)
+            if (shipment != null) {
+                val newTrackerViewHelper = TrackerViewHelper(_shipmentId = shipment.id)
+                trackerViewHelperList.add(newTrackerViewHelper)
+                shipment.subscribe(newTrackerViewHelper)
+            } else {
+                println("User typed invalid tracking number.")
+            }
+        }
+    }
 
     MaterialTheme {
         Column(
@@ -53,13 +70,22 @@ suspend fun App() {
             }
             LazyColumn {
                 items(trackerViewHelperList, key = { it.shipmentId }) { viewHelper ->
-                    Row(
+                    Column (
                         modifier = Modifier
-                            .padding(8.dp)
-                            .border(1.dp, Color.Black, RoundedCornerShape(4.dp))
-                            .padding(4.dp)
-                    ) {
-                        Text(text = viewHelper.shipmentStatus)
+                            .padding(16.dp)
+                            .background(Color.LightGray)
+                            .fillMaxWidth()
+                                ) {
+                        viewHelper.render()
+                        Button(
+                            onClick = {
+                                viewHelper.removeTracking()
+                                trackerViewHelperList.remove(viewHelper)
+                                      },
+                            modifier = Modifier.padding(8.dp)
+                        ) {
+                            Text("Delete")
+                        }
                     }
                 }
             }
@@ -67,20 +93,8 @@ suspend fun App() {
     }
 }
 
-fun addShipmentOnClick(inputId: String) {
-    if (inputId.isNotBlank()) {
-        val shipment: Shipment? = TrackingSimulator.findShipment(inputId)
-        if (shipment != null) {
-            TrackingSimulator.addShipment(shipment)
-        }
-        else {
-            println("User typed invalid tracking number.")
-        }
-    }
-}
-
 fun main() = application {
     Window(onCloseRequest = ::exitApplication) {
-        App1()
+        App()
     }
 }
