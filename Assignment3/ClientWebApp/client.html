@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shipping Tracker Client</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 50px;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            max-width: 300px;
+        }
+        label, input, button {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Send HTTP Request</h1>
+    <form id="httpForm">
+        <label for="ip">IP Address:</label>
+        <input type="text" id="ip" name="ip" required>
+
+        <label for="port">Port:</label>
+        <input type="text" id="port" name="port" required>
+
+        <label for="message">Message:</label>
+        <textarea id="message" name="message" required></textarea>
+
+        <button type="submit">Send</button>
+    </form>
+
+    <div id="response"></div>
+
+    <script>
+        document.getElementById('httpForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const ip = document.getElementById('ip').value;
+            const port = document.getElementById('port').value;
+            const message = document.getElementById('message').value;
+
+            const url = `http://${ip}:${port}`;
+            const data = { message: message };
+
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.text())
+            .then(text => {
+                document.getElementById('response').innerText = `Response: ${text}`;
+            })
+            .catch(error => {
+                document.getElementById('response').innerText = `Error: ${error}`;
+            });
+        });
+    </script>
+</body>
+</html>
