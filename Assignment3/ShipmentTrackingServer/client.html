@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Shipment Updater</title>
+    <script type="text/javascript">
+        function sendUpdate() {
+            fetch("/send", {
+                method: "post",
+                body: document.getElementById("update-input").value
+            })
+        }
+    </script>
+</head>
+<body>
+    <h1>Update Shipments</h1>
+    <div>
+        <label for="update-input">Update String
+            <input type="text" id="update-input">
+        </label>
+        <button onclick="sendUpdate()">Update Shipment</button>
+    </div>
+</body>
+</html>

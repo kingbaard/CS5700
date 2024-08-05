@@ -1,12 +1,15 @@
-class Shipment(
-    var status: String,
+open class Shipment(
     var id: String,
-    var notes: MutableList<String> = mutableListOf(),
-    var updateHistory: MutableList<ShippingUpdate> = mutableListOf(),
-    var expectedDeliveryDateTimestamp: Long? = null,
-    var currentLocation: String = "Unknown",
-    var observers: MutableList<UpdateObserver> = mutableListOf()
+    val validRange: Pair<Long, Long>,
+    val validRangeWarning: String
 ) : UpdateSubject {
+
+    var status: String = "pending"
+    var notes: MutableList<String> = mutableListOf()
+    var updateHistory: MutableList<ShippingUpdate> = mutableListOf()
+    var expectedDeliveryDateTimestamp: Long? = null
+    var currentLocation: String = "Unknown"
+    var observers: MutableList<UpdateObserver> = mutableListOf()
 
     fun addNote(note: String) {
         notes.add(note)

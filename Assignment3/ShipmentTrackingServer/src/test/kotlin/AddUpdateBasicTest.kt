@@ -1,34 +1,35 @@
 import org.junit.jupiter.api.Assertions.*
-import org.junit.jupiter.api.BeforeEach
+import kotlin.test.BeforeTest
 import kotlin.test.Test
 
 class AddUpdateBasicTest {
 
     private lateinit var shipment: Shipment
 
-    @BeforeEach
-    fun setUp() {
-        shipment = Shipment(
-            status = "Pending",
-            id = "123",
-            updateHistory = mutableListOf(),
-            expectedDeliveryDateTimestamp = null
-        )
+    @BeforeTest
+    fun setup() {
+        shipment = Shipment("123", Pair(0L, 0L), "Warning")
     }
 
     @Test
-    fun `test addUpdate changes status and returns ShippingUpdate`() {
-        // Arrange
-        val updateStringSplit = listOf("Shipped", "123", System.currentTimeMillis().toString())
+    fun testAddUpdateBasic() {
         val strategy = AddUpdateBasic()
+        val update = strategy.addUpdate(shipment, listOf("delivered", "123", "type", "1628163845"))
+        assertEquals("delivered", shipment.status)
+        assertNotNull(update)
+    }
 
-        // Act
-        val shippingUpdate = strategy.addUpdate(shipment, updateStringSplit)
+    @Test
+    fun testAddUpdateLocation() {
+        val strategy = AddUpdateLocation()
+        strategy.addUpdate(shipment, listOf("delivered", "123", "type", "1628163845", "New Location"))
+        assertEquals("New Location", shipment.currentLocation)
+    }
 
-        // Assert
-        assertEquals("Pending", shippingUpdate.previousStatus)
-        assertEquals("Shipped", shippingUpdate.newStatus)
-        assertEquals(updateStringSplit[2].toLong(), shippingUpdate.timestamp)
-        assertEquals("Shipped", shipment.status)
+    @Test
+    fun testAddUpdateNoteAdded() {
+        val strategy = AddUpdateNoteAdded()
+        strategy.addUpdate(shipment, listOf("delivered", "123", "type", "1628163845", "New Note"))
+        assertTrue(shipment.notes.contains("New Note"))
     }
 }

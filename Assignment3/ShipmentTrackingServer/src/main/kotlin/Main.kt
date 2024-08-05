@@ -1,10 +1,8 @@
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -25,12 +23,12 @@ fun App() {
     val trackerViewHelperList = remember { mutableStateListOf<TrackerViewHelper>() }
 
     LaunchedEffect(Unit) {
-        TrackingSimulator.runSimulation()
+        TrackingServer.startServer()
     }
 
     fun addShipmentOnClick(inputId: String) {
         if (inputId.isNotBlank()) {
-            val shipment: Shipment? = TrackingSimulator.findShipment(inputId)
+            val shipment: Shipment? = TrackingServer.findShipment(inputId)
             if (shipment != null) {
                 val newTrackerViewHelper = TrackerViewHelper(_shipmentId = shipment.id)
                 trackerViewHelperList.add(newTrackerViewHelper)
@@ -75,13 +73,13 @@ fun App() {
                             .padding(16.dp)
                             .background(Color.LightGray)
                             .fillMaxWidth()
-                                ) {
+                    ) {
                         viewHelper.render()
                         Button(
                             onClick = {
                                 viewHelper.removeTracking()
                                 trackerViewHelperList.remove(viewHelper)
-                                      },
+                            },
                             modifier = Modifier.padding(8.dp)
                         ) {
                             Text("Delete")
