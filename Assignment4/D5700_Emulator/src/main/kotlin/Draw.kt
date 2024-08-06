@@ -18,9 +18,10 @@ class Draw : Instruction() {
         return parameters.toList()
     }
 
-    override fun performOperation(parameters: List<UByte>) {
+    override fun performOperation(parameters: List<Int>) {
         val rx = parameters[0]
         val ry = parameters[1]
         val rz = parameters[2]
+
     }
 }

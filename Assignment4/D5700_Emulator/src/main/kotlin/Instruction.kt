@@ -14,5 +14,5 @@ abstract class Instruction {
         return byte.toInt() and 0xF
     }
 
-    abstract fun performOperation(parameters: List<UByte>)
+    abstract fun performOperation(parameters: List<Int>)
 }

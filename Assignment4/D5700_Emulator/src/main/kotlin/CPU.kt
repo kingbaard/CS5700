@@ -8,10 +8,12 @@ import kotlin.reflect.typeOf
 class CPU {
     val registryFactory : RegistryFactory = RegistryFactory()
     val registers : MutableMap<Int, Register> = mutableMapOf()
-    var instructionsMap : Map<Int, () -> Instruction> = mapOf(
-        0x00 to {Store()},
-        0x0F to {Draw()},
-
+//    var instructionsMap : Map<Int, () -> Instruction> = mapOf(
+//        0x00 to {Store()},
+//        0x0F to {Draw()},
+    var instructionsMap : Map<Int, Instruction> = mapOf(
+        0x00 to Store(),
+        0x0F to Draw(),
     )
 
     init {
@@ -24,30 +26,49 @@ class CPU {
         registers[0x4D] = registryFactory.createRegistry(RegisterType.ONE_BIT) // M emory
     }
 
-    fun tick() {
+    fun runTick() {
+
+        val pcRegister = registers[0x50] ?:throw IllegalStateException("Program counter not initialized")
+        val pcRegisterValue = pcRegister.getValueAsInt()
         // Read the two bytes
-        // TODO: Better way of handling optionals here (try catch?)
-        val instructionByte1 : UByte = D5700Emulator.rom.data[registers[0x50]?.data!!]
-        val instructionByte2 : UByte = D5700Emulator.rom.data[registers[0x50]?.data!!+1]
+        val instructionByte1 : UByte = D5700Emulator.rom.data[pcRegisterValue]
+        val instructionByte2 : UByte = D5700Emulator.rom.data[pcRegisterValue+1]
         val currentInstructions : UByteArray = ubyteArrayOf(instructionByte1, instructionByte2)
 
+        // Run current instructions
+        executeInstruction(currentInstructions)
 
+        // Decrement timer
+        decrementTimer()
     }
 
-    fun executeInstructions() {
-        val executor = Executors.newSingleThreadScheduledExecutor()
-        val future = executor.scheduleAtFixedRate(Runnable {
-            println("yo")
-        },
-            0,
-            1000,
-            TimeUnit.MICROSECONDS)
-
-        Thread.sleep(5000)
-        future.cancel(true)
+    fun decrementTimer() {
+        try {
+            val timerRegister = registers[0x54] ?: throw IllegalStateException("Timer register not initialized")
+            val timerValue = timerRegister.getValueAsInt()
+            if (timerValue > 0) {
+                timerRegister.setValue(timerValue - 1)
+            }
+        } catch (e: Exception) {
+            println("Error during decrementTimer: ${e.message}")
+        }
     }
 
-    fun executeInstruction() {
+    fun executeInstruction(instructions: UByteArray) {
+        val instructionParameter = instructions[0].toInt() shr 4
+        val parsedInstruction : Instruction? = instructionsMap[instructionParameter]
+        if (parsedInstruction != null ) {
+            val organizedParameters = parsedInstruction.organizeBytes(instructions)
+            parsedInstruction.performOperation(organizedParameters)
+        } else {
+            throw InternalError("Invalid registery nibble.")
+        }
+    }
 
+    fun intToTwoBytes(value: Int): RegisterDataType.UByteArray {
+        require(value in 0..0xFFFF) { "Value must be a 16-bit integer." }
+        val highByte : UByte = (value shr 8).toUByte()
+        val lowByte : UByte = value.toUByte()
+        return RegisterDataType.UByteArray(ubyteArrayOf(highByte, lowByte))
     }
 }
