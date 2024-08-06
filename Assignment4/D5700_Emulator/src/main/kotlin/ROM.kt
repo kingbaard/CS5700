@@ -1,5 +1,6 @@
 package org.example
 
-class ROM: MemoryDevice() {
-    override val isWritable = false
+@OptIn(ExperimentalUnsignedTypes::class)
+class ROM(initData: UByteArray?) : MemoryDevice(initData) {
+    override val isWritable: Boolean = false
 }

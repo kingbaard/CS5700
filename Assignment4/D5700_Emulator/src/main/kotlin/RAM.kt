@@ -1,6 +1,6 @@
 package org.example
 
-class RAM: MemoryDevice() {
-    override val isWritable = true
-
+@OptIn(ExperimentalUnsignedTypes::class)
+class RAM(initData: UByteArray?) : MemoryDevice(initData) {
+    override val isWritable: Boolean = true
 }

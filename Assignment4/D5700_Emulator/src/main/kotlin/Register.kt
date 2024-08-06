@@ -1,4 +1,6 @@
 package org.example
 
-class Register {
+interface Register {
+    val size: Int
+    var data: Int
 }
