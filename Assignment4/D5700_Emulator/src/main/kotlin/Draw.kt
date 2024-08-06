@@ -1,27 +1,15 @@
 package org.example
 
 @OptIn(ExperimentalUnsignedTypes::class)
-class Draw : Instruction() {
-
-    override fun organizeBytes(instructionBytes: UByteArray): List<Int> {
-        val firstByte = instructionBytes[0]
-        val secondByte = instructionBytes[1]
-
-        val parameters: MutableList<Int> = mutableListOf()
-        //rx
-        parameters.add(getSecondNibble(firstByte))
-        //ry
-        parameters.add(getFirstNibble(secondByte))
-        //rz
-        parameters.add(getSecondNibble(secondByte))
-
-        return parameters.toList()
-    }
+class Draw : Instruction(), OrganizeBytesThreeRegisterParam {
+    val shouldIncrement = true
 
     override fun performOperation(parameters: List<Int>) {
-        val rx = parameters[0]
+        val rx = parameters[0].toChar()
         val ry = parameters[1]
         val rz = parameters[2]
 
+
+        D5700Emulator.Screen.setBufferCell(D5700Emulator.CPU.registers[ry].getValue(), D5700Emulator.CPU.registers[rz].getValue(), D5700Emulator.CPU.registers[rx].getValue())
     }
 }

@@ -1,11 +1,8 @@
 package org.example
 
-class Store : Instruction() {
-    override fun organizeBytes(instructionBytes: UByteArray): List<Int> {
-        TODO("Not yet implemented")
-    }
-
-    override fun performOperation(parameters: List<UByte>) {
-        TODO("Not yet implemented")
+class Store : Instruction(), OrganizeByteOneRegisterOneByteParam {
+    
+    override fun performOperation(parameters: List<Int>) {
+        D5700Emulator.CPU.registers[parameters[0]].setValue(parameters[1].toUByte())
     }
 }
