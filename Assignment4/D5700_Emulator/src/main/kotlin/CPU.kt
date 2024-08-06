@@ -42,7 +42,7 @@ class CPU {
 
     fun runTick() {
 
-        val pcRegister = registers[0x50] ?:throw IllegalStateException("Program counter not initialized")
+        val pcRegister = registers[0x50] ?:throw IllegalStateException("Program counter registery not initialized")
         val pcRegisterValue = pcRegister.getValueAsInt()
         // Read the two bytes
         val instructionByte1 : UByte = D5700Emulator.rom.data[pcRegisterValue]

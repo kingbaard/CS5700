@@ -1,7 +1,7 @@
 package org.example
 
 class Add : Instruction(), OrganizeBytesThreeRegisterParam {
-    
+    val shouldIncrement = true
     override fun performOperation(parameters: List<Int>) {
         val xValue = D5700Emulator.CPU.registers[parameters[0]].getValue()
         val yValue = D5700Emulator.CPU.registers[parameters[1]].getValue()

@@ -8,12 +8,16 @@ import java.util.concurrent.TimeUnit
 @OptIn(ExperimentalUnsignedTypes::class)
 object D5700Emulator {
     var rom: ROM
-    val ram: RAM = RAM(null)
+    val ram: RAM
     val cpu: CPU = CPU()
     val screen: Screen = Screen()
 
+    private val CPU_FREQUENCY_HZ = 500L
+    private val TIMER_FREQUENCY_HZ = 60L
+
     init {
         rom = ROM(programPrompt())
+        ram = RAM(null)
         runProgram()
     }
 
@@ -30,11 +34,11 @@ object D5700Emulator {
         val cpuFuture = executor.scheduleAtFixedRate(
             cpuRunnable,
             0,
-            1000L / 500L, // repeat frequency - every 2 ms (500 Hz)
+            1000L / CPU_FREQUENCY_HZ, // repeat frequency - every 2 ms (500 Hz)
             TimeUnit.MILLISECONDS
         )
 
-        // Shutdown executor gracefully when needed
+        // Properly stop executor
         Runtime.getRuntime().addShutdownHook(Thread {
             cpuFuture.cancel(true)
             executor.shutdown()
@@ -50,17 +54,21 @@ object D5700Emulator {
         val timerFuture = executor.scheduleAtFixedRate(
             timerRunnable,
             0,
-            1000L / 60L, // repeat frequency - every 16 ms (60 Hz)
+            1000L / TIMER_FREQUENCY_HZ, // repeat frequency - every 16 ms (60 Hz)
             TimeUnit.MILLISECONDS
         )
 
-        // Shutdown executor gracefully when needed
+        // Properly stop executor
         Runtime.getRuntime().addShutdownHook(Thread {
             timerFuture.cancel(true)
             executor.shutdown()
         })
     }
 
+    private fun shutdown() {
+        println("Shutting down...")
+        System.exit(0)
+    }
 
     private fun programPrompt(): UByteArray? {
         println("Enter the file path:")
