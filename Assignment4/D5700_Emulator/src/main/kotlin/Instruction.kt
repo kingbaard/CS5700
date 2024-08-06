@@ -6,13 +6,13 @@ abstract class Instruction {
     // primitive methods
     abstract fun organizeBytes(instructionBytes: UByteArray) : List<Int>
 
-    fun getFirstNibble(byte : UByte): Int {
-        return byte.toInt() shr 4
-    }
+    // fun getFirstNibble(byte : UByte): Int {
+    //     return byte.toInt() shr 4
+    // }
 
-    fun getSecondNibble(byte : UByte): Int {
-        return byte.toInt() and 0xF
-    }
+    // fun getSecondNibble(byte : UByte): Int {
+    //     return byte.toInt() and 0xF
+    // }
 
     abstract fun performOperation(parameters: List<Int>)
 }
