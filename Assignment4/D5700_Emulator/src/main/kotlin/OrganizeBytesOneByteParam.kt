@@ -3,10 +3,10 @@ package org.example
 @OptIn(ExperimentalUnsignedTypes::class)
 interface OrganizeBytesOneByteParam() : OrganizeBytesStrategy {
     fun organizeBytes(data: UByteArray): List<Int> {
-        // Each nibble (besides the first nibble of the first byte) is it's own parameter
+        // Byte is made up of second half of first byte and first half of second byte
         val firstByteSecondNibble: Int = getSecondNibble(data[0])
         val secondByteFirstNibble = getFirstNibble(data[1])
-
+        val intValue = ((firstByteSecondNibble shl 4) or secondByteFirstNibble).toInt()
         return listOf((firstByteSecondNibble shl 4) or secondByteFirstNibble)
     }
 }

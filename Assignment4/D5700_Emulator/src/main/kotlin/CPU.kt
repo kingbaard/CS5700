@@ -13,6 +13,20 @@ class CPU {
 //        0x0F to {Draw()},
     var instructionsMap : Map<Int, Instruction> = mapOf(
         0x00 to Store(),
+        0x01 to Add(),
+        0x02 to Sub(),
+        0x03 to Read(),
+        0x04 to Write(),
+        0x05 to Jump(),
+        0x06 to ReadKeyboard(),
+        0x07 to SwitchMemory(),
+        0x08 to SkipEqual(),
+        0x09 to SkipNotEqual(),
+        0x0A to SetA(),
+        0x0B to SetT(),
+        0x0C to ReadT(),
+        0x0D to ConvertToBase10(),
+        0x0E to ConvertByteToAscii(),
         0x0F to Draw(),
     )
 
@@ -37,9 +51,6 @@ class CPU {
 
         // Run current instructions
         executeInstruction(currentInstructions)
-
-        // Decrement timer
-        decrementTimer()
     }
 
     fun decrementTimer() {

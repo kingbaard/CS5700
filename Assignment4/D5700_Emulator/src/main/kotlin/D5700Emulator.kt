@@ -41,6 +41,26 @@ object D5700Emulator {
         })
     }
 
+    fun runTimer() {
+        val executor = Executors.newSingleThreadScheduledExecutor()
+        val timerRunnable = Runnable {
+            cpu.decrementTimer()
+        }
+
+        val timerFuture = executor.scheduleAtFixedRate(
+            timerRunnable,
+            0,
+            1000L / 60L, // repeat frequency - every 16 ms (60 Hz)
+            TimeUnit.MILLISECONDS
+        )
+
+        // Shutdown executor gracefully when needed
+        Runtime.getRuntime().addShutdownHook(Thread {
+            timerFuture.cancel(true)
+            executor.shutdown()
+        })
+    }
+
 
     private fun programPrompt(): UByteArray? {
         println("Enter the file path:")

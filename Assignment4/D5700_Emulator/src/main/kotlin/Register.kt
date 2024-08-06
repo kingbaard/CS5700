@@ -19,7 +19,9 @@ interface Register {
     }
 
     fun setValue(value: Int) {
-        this.data = RegisterDataType.Integer(value)
+        val byteArray = UByteArray(size)
+        byteArray[0] = value.toUByte()
+        this.data = RegisterDataType.UByteArray(byteArray)
     }
 
     fun setValue(value: UByteArray) {

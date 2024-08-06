@@ -18,9 +18,9 @@ abstract class MemoryDevice(initData: UByteArray?) {
         return data.get(address)
     }
 
-    fun write(address: Int, data: UByte) {
+    fun write(address: Int, newData: UByte) {
         if (isWritable) {
-            data.copyInto(this.data, address)
+            newData.copyInto(this.data, address)
         } else {
             throw IllegalAccessException("Cannot write data, the device is not writable.")
         }
