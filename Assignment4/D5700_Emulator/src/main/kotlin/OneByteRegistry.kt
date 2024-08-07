@@ -1,8 +1,9 @@
 package org.example
 
 @OptIn(ExperimentalUnsignedTypes::class)
-class OneByteRegistry : Register {
+class OneByteRegistry : Registry() {
     override val size = 1
-    override var data : RegisterDataType = RegisterDataType.UByteArray(UByteArray(size) { 0.toUByte() })
+    override var data : RegistryDataType = RegistryDataType.UByteArray(UByteArray(size) { 0.toUByte() })
+
 
 }

@@ -1,47 +1,42 @@
 package org.example
 
-import java.util.concurrent.Executors
-import java.util.concurrent.TimeUnit
-import kotlin.reflect.typeOf
-
 @OptIn(ExperimentalUnsignedTypes::class)
 class CPU {
     val registryFactory : RegistryFactory = RegistryFactory()
-    val registers : MutableMap<Int, Register> = mutableMapOf()
+    val registers : MutableMap<Int, Registry> = mutableMapOf()
 //    var instructionsMap : Map<Int, () -> Instruction> = mapOf(
 //        0x00 to {Store()},
 //        0x0F to {Draw()},
     var instructionsMap : Map<Int, Instruction> = mapOf(
-        0x00 to Store(),
-        0x01 to Add(),
-        0x02 to Sub(),
-        0x03 to Read(),
-        0x04 to Write(),
-        0x05 to Jump(),
-        0x06 to ReadKeyboard(),
-        0x07 to SwitchMemory(),
-        0x08 to SkipEqual(),
-        0x09 to SkipNotEqual(),
-        0x0A to SetA(),
-        0x0B to SetT(),
-        0x0C to ReadT(),
-        0x0D to ConvertToBase10(),
-        0x0E to ConvertByteToAscii(),
-        0x0F to Draw(),
+        0x00 to InstructionStore(),
+        0x01 to InstructionAdd(),
+        0x02 to InstructionSub(),
+        0x03 to InstructionRead(),
+        0x04 to InstructionWrite(),
+        0x05 to InstructionJump(),
+        0x06 to InstructionReadKeyboard(),
+        0x07 to InstructionSwitchMemory(),
+        0x08 to InstructionSkipEqual(),
+        0x09 to InstructionSkipNotEqual(),
+        0x0A to InstructionSetA(),
+        0x0B to InstructionSetT(),
+        0x0C to InstructionReadT(),
+        0x0D to InstructionConvertToBase10(),
+        0x0E to InstructionConvertByteToAscii(),
+        0x0F to InstructionDraw(),
     )
 
     init {
         for (i in 0..7) {
-            registers[i] = registryFactory.createRegistry(RegisterType.ONE_BYTE)
+            registers[i] = registryFactory.createRegistry(RegistryType.ONE_BYTE)
         }
-        registers[0x50] = registryFactory.createRegistry(RegisterType.TWO_BYTE) // P rogram Counter
-        registers[0x54] = registryFactory.createRegistry(RegisterType.ONE_BYTE) // T imer
-        registers[0x41] = registryFactory.createRegistry(RegisterType.TWO_BYTE) // A ddress
-        registers[0x4D] = registryFactory.createRegistry(RegisterType.ONE_BIT) // M emory
+        registers[0x50] = registryFactory.createRegistry(RegistryType.TWO_BYTE) // P rogram Counter
+        registers[0x54] = registryFactory.createRegistry(RegistryType.ONE_BYTE) // T imer
+        registers[0x41] = registryFactory.createRegistry(RegistryType.TWO_BYTE) // A ddress
+        registers[0x4D] = registryFactory.createRegistry(RegistryType.ONE_BIT) // M emory
     }
 
     fun runTick() {
-
         val pcRegister = registers[0x50] ?:throw IllegalStateException("Program counter registery not initialized")
         val pcRegisterValue = pcRegister.getValueAsInt()
         // Read the two bytes
@@ -50,7 +45,7 @@ class CPU {
         val currentInstructions : UByteArray = ubyteArrayOf(instructionByte1, instructionByte2)
 
         // Run current instructions
-        executeInstruction(currentInstructions)
+        executeInstruction(currentInstructions, pcRegister)
     }
 
     fun decrementTimer() {
@@ -65,21 +60,20 @@ class CPU {
         }
     }
 
-    fun executeInstruction(instructions: UByteArray) {
+    fun executeInstruction(instructions: InstructionJump, pcRegister: Registry) {
         val instructionParameter = instructions[0].toInt() shr 4
         val parsedInstruction : Instruction? = instructionsMap[instructionParameter]
         if (parsedInstruction != null ) {
-            val organizedParameters = parsedInstruction.organizeBytes(instructions)
-            parsedInstruction.performOperation(organizedParameters)
+            parsedInstruction.execute(instructions, pcRegister)
         } else {
             throw InternalError("Invalid registery nibble.")
         }
     }
 
-    fun intToTwoBytes(value: Int): RegisterDataType.UByteArray {
+    fun intToTwoBytes(value: Int): RegistryDataType.UByteArray {
         require(value in 0..0xFFFF) { "Value must be a 16-bit integer." }
         val highByte : UByte = (value shr 8).toUByte()
         val lowByte : UByte = value.toUByte()
-        return RegisterDataType.UByteArray(ubyteArrayOf(highByte, lowByte))
+        return RegistryDataType.UByteArray(ubyteArrayOf(highByte, lowByte))
     }
 }

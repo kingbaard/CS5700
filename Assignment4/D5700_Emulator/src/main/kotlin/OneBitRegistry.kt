@@ -1,21 +1,22 @@
 package org.example
 
-class OneBitRegistry : Register {
+@OptIn(ExperimentalUnsignedTypes::class)
+class OneBitRegistry : Registry() {
     override val size: Int = 1
-    override var data : RegisterDataType = RegisterDataType.Integer(0)
+    override var data : RegistryDataType = RegistryDataType.Integer(0)
 
     override fun setValue(value: Int) {
-        this.data = RegisterDataType.Integer(value)
+        this.data = RegistryDataType.Integer(value)
     }
 
-    overide fun setValue(value: UByteArray) {
+    override fun setValue(value: UByteArray) {
         if (value.size != 1) {
             throw IllegalArgumentException("Invalid size for OneBitRegistry")
         }
         if (value[0] == 0.toUByte()) {
-            this.data = RegisterDataType.Integer(0)
+            this.data = RegistryDataType.Integer(0)
         } else {
-            this.data = RegisterDataType.Integer(1)
+            this.data = RegistryDataType.Integer(1)
         }
     }
 }

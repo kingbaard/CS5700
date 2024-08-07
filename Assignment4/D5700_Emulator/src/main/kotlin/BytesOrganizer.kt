@@ -1,7 +1,7 @@
 package org.example
 
 @OptIn(ExperimentalUnsignedTypes::class)
-interface OrganizeBytesStrategy() {
+abstract class BytesOrganizer {
     abstract fun organizeBytes(data: UByteArray): List<Int>
 
     fun getFirstNibble(byte : UByte): Int {

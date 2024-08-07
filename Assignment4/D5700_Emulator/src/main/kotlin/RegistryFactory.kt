@@ -1,11 +1,11 @@
 package org.example
 
 class RegistryFactory {
-    fun createRegistry(type: RegisterType): Register {
+    fun createRegistry(type: RegistryType): Registry {
         return when (type) {
-            RegisterType.TWO_BYTE -> TwoByteRegistry()
-            RegisterType.ONE_BYTE -> OneByteRegistry()
-            RegisterType.ONE_BIT -> OneBitRegistry()
+            RegistryType.TWO_BYTE -> TwoByteRegistry()
+            RegistryType.ONE_BYTE -> OneByteRegistry()
+            RegistryType.ONE_BIT -> OneBitRegistry()
         }
     }
 }
