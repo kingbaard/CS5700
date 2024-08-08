@@ -2,29 +2,27 @@ package org.example
 
 @OptIn(ExperimentalUnsignedTypes::class)
 class CPU {
-    val registryFactory : RegistryFactory = RegistryFactory()
+    private val registryFactory : RegistryFactory = RegistryFactory()
     val registers : MutableMap<Int, Registry> = mutableMapOf()
-//    var instructionsMap : Map<Int, () -> Instruction> = mapOf(
-//        0x00 to {Store()},
-//        0x0F to {Draw()},
-    var instructionsMap : Map<Int, Instruction> = mapOf(
-        0x00 to InstructionStore(),
-        0x01 to InstructionAdd(),
-        0x02 to InstructionSub(),
-        0x03 to InstructionRead(),
-        0x04 to InstructionWrite(),
-        0x05 to InstructionJump(),
-        0x06 to InstructionReadKeyboard(),
-        0x07 to InstructionSwitchMemory(),
-        0x08 to InstructionSkipEqual(),
-        0x09 to InstructionSkipNotEqual(),
-        0x0A to InstructionSetA(),
-        0x0B to InstructionSetT(),
-        0x0C to InstructionReadT(),
-        0x0D to InstructionConvertToBase10(),
-        0x0E to InstructionConvertByteToAscii(),
-        0x0F to InstructionDraw(),
-    )
+
+    private var instructionsMap : Map<Int, Instruction> = mapOf(
+            0x00 to InstructionStore(),
+            0x01 to InstructionAdd(),
+            0x02 to InstructionSub(),
+            0x03 to InstructionRead(),
+            0x04 to InstructionWrite(),
+            0x05 to InstructionJump(),
+            0x06 to InstructionReadKeyboard(),
+            0x07 to InstructionSwitchMemory(),
+            0x08 to InstructionSkipEqual(),
+            0x09 to InstructionSkipNotEqual(),
+            0x0A to InstructionSetA(),
+            0x0B to InstructionSetT(),
+            0x0C to InstructionReadT(),
+            0x0D to InstructionConvertToBase10(),
+            0x0E to InstructionConvertByteToAscii(),
+            0x0F to InstructionDraw(),
+        )
 
     init {
         for (i in 0..7) {
@@ -60,20 +58,13 @@ class CPU {
         }
     }
 
-    fun executeInstruction(instructions: InstructionJump, pcRegister: Registry) {
-        val instructionParameter = instructions[0].toInt() shr 4
+    fun executeInstruction(stepByes: UByteArray, pcRegister: Registry) {
+        val instructionParameter = stepByes[0].toInt() shr 4
         val parsedInstruction : Instruction? = instructionsMap[instructionParameter]
         if (parsedInstruction != null ) {
-            parsedInstruction.execute(instructions, pcRegister)
+            parsedInstruction.execute(stepByes, pcRegister)
         } else {
             throw InternalError("Invalid registery nibble.")
         }
-    }
-
-    fun intToTwoBytes(value: Int): RegistryDataType.UByteArray {
-        require(value in 0..0xFFFF) { "Value must be a 16-bit integer." }
-        val highByte : UByte = (value shr 8).toUByte()
-        val lowByte : UByte = value.toUByte()
-        return RegistryDataType.UByteArray(ubyteArrayOf(highByte, lowByte))
     }
 }

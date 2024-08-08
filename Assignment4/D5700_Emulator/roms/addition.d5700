@@ -1,0 +1,17 @@
+6000 //Input
+6100 //Input
+1010 //Add
+A000 //Set_A
+D000 //Convert to Base10
+A000 //Set_A
+3000 //Read memory
+A001 //Set_A
+3100 //Read
+A002 //Set_A
+3200 //Read
+E000 //Convert to Ascii
+E110 //Convert to Ascii
+E220 //Convert to Ascii
+F000 //Draw
+F101 //Draw
+F202 //Draw

@@ -1,0 +1,14 @@
+6000 //read keyboard
+A000 //set A
+D000 //Convert to base 10
+3000 //Read
+A001 //Set A
+3100 //Read
+A002 //Set A
+3200 //Read
+E000 //Convert to ASCII
+E110 //Convert to ASCII
+E220 //Convert to ASCII
+F000 //Draw
+F101 //Draw
+F202 //Draw

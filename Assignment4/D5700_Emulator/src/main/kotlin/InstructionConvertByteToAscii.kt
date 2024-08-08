@@ -6,9 +6,11 @@ class InstructionConvertByteToAscii : Instruction() {
 
     override fun performOperation(parameters: List<Int>) {
         val xValue = D5700Emulator.cpu.registers[parameters[0]]?.getValueAsInt()
-        val asciiValue = xValue?.toChar()
+        val asciiValue = (xValue?.plus('0'.toInt()))?.toUByte()
 
         // Todo: Fix this
-        D5700Emulator.cpu.registers[parameters[1]]?.setValue(1)
+        if (asciiValue != null) {
+            D5700Emulator.cpu.registers[parameters[1]]?.setValue(asciiValue)
+        }
     }
 }

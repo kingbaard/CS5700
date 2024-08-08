@@ -14,17 +14,9 @@ class InstructionConvertToBase10 : Instruction() {
 
         // Place the highest digit in ROM[rA], the second highest in ROM[rA+1], ect
         // Todo: Move the rom/ram check to a more relevant class
-        for (i in 0 until digits.size) {
-            if (D5700Emulator.cpu.registers[0x4D]?.getValueAsInt() == 0) {
-                // Write to RAM
-                if (aRegistryValue != null) {
-                    D5700Emulator.ram.write(aRegistryValue + i, digits[i].toString().toUByte())
-                }
-            } else {
-                // Attempt write to ROM
-                if (aRegistryValue != null) {
-                    D5700Emulator.rom.write(aRegistryValue + i, digits[i].toString().toUByte())
-                }
+        for (i in digits.indices) {
+            if (aRegistryValue != null) {
+                D5700Emulator.currentMemoryDevice.write(aRegistryValue + i, digits[i].toString().toUByte())
             }
         }
     }

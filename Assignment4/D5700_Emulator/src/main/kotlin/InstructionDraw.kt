@@ -19,8 +19,8 @@ class InstructionDraw : Instruction() {
         } else {
             D5700Emulator.screen.setBufferCell(
                 ry,
-                rx,
-                rzRegister.getValueAsInt()
+                rz,
+                rxRegister.getValueAsInt()
             )
         }
         D5700Emulator.screen.display()

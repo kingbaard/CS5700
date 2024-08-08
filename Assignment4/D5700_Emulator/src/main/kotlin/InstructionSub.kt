@@ -7,9 +7,9 @@ class InstructionSub : Instruction() {
     override fun performOperation(parameters: List<Int>) {
         val xValue = D5700Emulator.cpu.registers[parameters[0]]?.getValueAsInt()
         val yValue = D5700Emulator.cpu.registers[parameters[1]]?.getValueAsInt()
-        if (D5700Emulator.cpu.registers[parameters[3]] != null) {
+        if (D5700Emulator.cpu.registers[parameters[2]] != null) {
             if (xValue != null && yValue != null) {
-                D5700Emulator.cpu.registers[parameters[3]]?.setValue(xValue - yValue)
+                D5700Emulator.cpu.registers[parameters[2]]?.setValue(xValue - yValue)
             }
         }
     }
