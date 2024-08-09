@@ -6,8 +6,6 @@ class InstructionJump : Instruction() {
     override val byteOrganizer: BytesOrganizer = OrganizerOneAddress()
     override fun performOperation(parameters: List<Int>) {
         val address = parameters[0]
-        // todo: add upperbound to check
-//        if (address < 0 || address >= D5700Emulator.currentMemoryDevice.size) {
         if (address < 0 || address > D5700Emulator.rom.data.size) {
             throw IllegalArgumentException("Read Error: Address out of bounds")
         }
